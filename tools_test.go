@@ -2,9 +2,7 @@ package CocosTools
 
 import (
 	sdk "CocosSDK"
-	"CocosSDK/chain"
 	"CocosSDK/rpc"
-	"CocosSDK/type"
 	"encoding/json"
 	"testing"
 )
@@ -54,12 +52,6 @@ func TestBalanceForAddress(t *testing.T) {
 	}
 }
 
-func TestBuildTransaction(t *testing.T) {
-	hex_str, err := BuildTransaction("gggg1", "ximenyan1111", 1.1, "C0C0S")
-	t.Log(err)
-	t.Log(hex_str)
-}
-
 func TestDeserializeTransactions(t *testing.T) {
 	sign_tx, _ := DeserializeTransactions("c1ac4bb7bd7d94874a1cb98b39a8a582421d03d022dfa4be8c70567076e03ad0f83b7f4d06b01d3ec85d01001a0000000000000016000000000000008096980000000000040000000000000001030ed1f4745aeb7194e1eea53bf6c4a217ba3b8f7d63ebad2e22543b99469bb03203d53f078f6ea92d7d33a06bf0e23569e376baf516ed0f5efe9a1b714be5f031d16a23d583d67366d710661cd4569de5a081559c97e382a360700000")
 	byte_s, err := json.Marshal(sign_tx)
@@ -70,7 +62,7 @@ func TestDeserializeTransactions(t *testing.T) {
 
 func TestSignTransaction(t *testing.T) {
 	tx, err := SignTransaction("c1ac4bb7bd7d94874a1cb98b39a8a582421d03d022dfa4be8c70567076e03ad0486711d2c551899dc85d010016000000000000001a00000000000000a08601000000000000000000000000000103d53f078f6ea92d7d33a06bf0e23569e376baf516ed0f5efe9a1b714be5f031d1030ed1f4745aeb7194e1eea53bf6c4a217ba3b8f7d63ebad2e22543b99469bb032b4d412ed0c8e38561077883f0dfb4c3f8e1068c92ef3e9653f0000",
-		"202c76ab413de66315922a95c65b0dc77073bf1f9a7e809b0aa51db9f1592e359c2de34ed115c039d356ca573e0d4dc818a258acfc0af48c44c6e4c8d2c9d57508")
+		[]string{"202c76ab413de66315922a95c65b0dc77073bf1f9a7e809b0aa51db9f1592e359c2de34ed115c039d356ca573e0d4dc818a258acfc0af48c44c6e4c8d2c9d57508"})
 
 	byte_s, err := json.Marshal(tx)
 	if err == nil {
