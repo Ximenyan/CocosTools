@@ -381,7 +381,9 @@ func TxsForAddress(address string, args ...interface{}) (txs []Tx, err error) {
 			tx_info := block.Transactions[trx_in_block]
 			if byte_s, err := json.Marshal(tx_info); err == nil {
 				tx := gjson.ParseBytes(byte_s)
-				if !start && tx.Get("0").String() != since_hash {
+				if !start &&
+					since_hash != "" &&
+					tx.Get("0").String() != since_hash {
 					continue
 				} else {
 					start = true
