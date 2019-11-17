@@ -1,7 +1,7 @@
 package CocosTools
 
 import (
-	. "CocosSDK"
+	sdk "CocosSDK"
 	. "CocosSDK/common"
 	"CocosSDK/rpc"
 	. "CocosSDK/type"
@@ -126,6 +126,7 @@ func DeserializeTransactions(tx_raw_hex string) (sign_tx *wallet.Signed_Transact
 
 func Deserialize(tx_raw_hex string) (tx *Tx, err error) {
 	var byte_s []byte
+	tx_hash := UnsignedTxHash(tx_raw_hex)
 	//去除chainId
 	tx_raw_hex = tx_raw_hex[64:]
 	byte_s, err = hex.DecodeString(tx_raw_hex)
@@ -154,7 +155,7 @@ func Deserialize(tx_raw_hex string) (tx *Tx, err error) {
 			amount := UintVar(byte_s[0:8])
 			amount_asset_id_bytes := byte_s[8:16]
 			byte_s = byte_s[16:]
-			c_fees := GetCurrentFees()
+			c_fees := sdk.GetCurrentFees()
 			fee_amount := c_fees[OP_TRANSFER].Get("fee").Int()
 			if byte_s[0] != 0 {
 				//移除公钥信息
@@ -202,6 +203,7 @@ func Deserialize(tx_raw_hex string) (tx *Tx, err error) {
 		}
 	}
 	tx = &Tx{
+		TxHash:  tx_hash,
 		Inputs:  inputs,
 		Outputs: outputs,
 		TxAt:    tx_at,
@@ -258,7 +260,7 @@ func Getrawmempool() (txs []Tx, err error) {
 }
 
 func Getblocktxs(count int64) (txs []Tx, err error) {
-	block := GetBlock(count)
+	block := sdk.GetBlock(count)
 	defer func() {
 		if recover() != nil {
 			txs = nil
@@ -335,7 +337,7 @@ func Getblocktxs(count int64) (txs []Tx, err error) {
 }
 
 func BalanceForAddress(address string) *[]rpc.Balance {
-	return GetAccountBalances(address)
+	return sdk.GetAccountBalances(address)
 }
 
 func TxsForAddress(address string, args ...interface{}) (txs []Tx, err error) {
@@ -365,7 +367,7 @@ func TxsForAddress(address string, args ...interface{}) (txs []Tx, err error) {
 	}
 	txs = []Tx{}
 	start := false
-	for _, tx_info := range GetAccountHistorys(acct_info.ID) {
+	for _, tx_info := range sdk.GetAccountHistorys(acct_info.ID) {
 		if byte_s, err := json.Marshal(tx_info); err == nil {
 			tx := gjson.ParseBytes(byte_s)
 			operation := tx.Get("op")
@@ -375,7 +377,7 @@ func TxsForAddress(address string, args ...interface{}) (txs []Tx, err error) {
 			}
 			block_num := tx.Get("block_num").Int()
 			trx_in_block := tx.Get("trx_in_block").Int()
-			block := GetBlock(block_num)
+			block := sdk.GetBlock(block_num)
 			tx_info := block.Transactions[trx_in_block]
 			if byte_s, err := json.Marshal(tx_info); err == nil {
 				tx := gjson.ParseBytes(byte_s)
@@ -453,9 +455,9 @@ func TxsForAddress(address string, args ...interface{}) (txs []Tx, err error) {
 }
 
 func GetTransaction(tx_hash string) (tx *Tx, err error) {
-	tx_info := GetTransactionById(tx_hash)
-	block_info := GetTransactionInBlock(tx_hash)
-	block := GetBlock(block_info.BlockNum)
+	tx_info := sdk.GetTransactionById(tx_hash)
+	block_info := sdk.GetTransactionInBlock(tx_hash)
+	block := sdk.GetBlock(block_info.BlockNum)
 	if tx_info == nil {
 		err = errors.New("transaction not found!!!!")
 		return
@@ -559,7 +561,7 @@ func BuildTransaction(from, to string, amount float64, symbol ...string) (tx_raw
 	}
 	byte_s := st.GetBytes()
 	var cid []byte
-	if cid, err = hex.DecodeString(Chain.Properties.ChainID); err != nil {
+	if cid, err = hex.DecodeString(sdk.Chain.Properties.ChainID); err != nil {
 		return
 	}
 	byte_s = append(cid, byte_s...)
