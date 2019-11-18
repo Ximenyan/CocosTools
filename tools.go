@@ -574,22 +574,27 @@ func BuildTransaction(from, to string, amount float64, symbol ...string) (tx_raw
 
 func CreateAccount(name, hex_puk string) (tx_hash string, err error) {
 	var byte_s []byte
+
 	defer func() {
-		if recover() != nil {
+		if r := recover(); r != nil {
+			fmt.Println(r)
 			tx_hash = ""
 			err = errors.New("CreateAccount Is Error!")
 		}
 	}()
+	if sdk.Wallet.Default.Info == nil {
+		sdk.Wallet.Default.Info = rpc.GetAccountInfoByName(sdk.Wallet.Default.Name)
+	}
 	byte_s, err = hex.DecodeString(hex_puk)
 	if err != nil {
 		return
 	}
 	puk := wallet.PublicKey(byte_s)
 	if _, err := PublicToAddress(puk.ToBase58String()); err == nil {
-		return "", err
+		return "", errors.New("puk in database is exist!!")
 	}
 	if _, err := AddressToPublic(name); err == nil {
-		return "", err
+		return "", errors.New("name in database is exist!!")
 	}
 	c := CreateRegisterData(puk.ToBase58String(), puk.ToBase58String(), name, sdk.Wallet.Default.Info.ID, sdk.Wallet.Default.Info.ID)
 	tx_hash, err = sdk.Wallet.SignAndSendTX(OP_CREATE_ACCOUNT, c)
