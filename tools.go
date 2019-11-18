@@ -585,10 +585,10 @@ func CreateAccount(name, hex_puk string) (tx_hash string, err error) {
 		return
 	}
 	puk := wallet.PublicKey(byte_s)
-	if _, err := PublicToAddress(puk.ToBase58String()); err != nil {
+	if _, err := PublicToAddress(puk.ToBase58String()); err == nil {
 		return "", err
 	}
-	if _, err := AddressToPublic(name); err != nil {
+	if _, err := AddressToPublic(name); err == nil {
 		return "", err
 	}
 	c := CreateRegisterData(puk.ToBase58String(), puk.ToBase58String(), name, sdk.Wallet.Default.Info.ID, sdk.Wallet.Default.Info.ID)
