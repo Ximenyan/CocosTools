@@ -572,6 +572,30 @@ func BuildTransaction(from, to string, amount float64, symbol ...string) (tx_raw
 	return
 }
 
+func CreateAccount(name, hex_puk string) (tx_hash string, err error) {
+	var byte_s []byte
+	defer func() {
+		if recover() != nil {
+			tx_hash = ""
+			err = errors.New("CreateAccount Is Error!")
+		}
+	}()
+	byte_s, err = hex.DecodeString(hex_puk)
+	if err != nil {
+		return
+	}
+	puk := wallet.PublicKey(byte_s)
+	if _, err := PublicToAddress(puk.ToBase58String()); err != nil {
+		return "", err
+	}
+	if _, err := AddressToPublic(name); err != nil {
+		return "", err
+	}
+	c := CreateRegisterData(puk.ToBase58String(), puk.ToBase58String(), name, sdk.Wallet.Default.Info.ID, sdk.Wallet.Default.Info.ID)
+	tx_hash, err = sdk.Wallet.SignAndSendTX(OP_CREATE_ACCOUNT, c)
+	return tx_hash, err
+}
+
 func SignTransaction(tx_raw_hex string, signatures []string) (tx *Tx, e error) {
 	sign_tx, err := DeserializeTransactions(tx_raw_hex)
 	if err != nil {
