@@ -574,14 +574,18 @@ func BuildTransaction(from, to string, amount float64, symbol ...string) (tx_raw
 
 func CreateAccount(name, hex_puk string) (tx_hash string, err error) {
 	var byte_s []byte
-
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Println(r)
 			tx_hash = ""
 			err = errors.New("CreateAccount Is Error!")
 		}
 	}()
+	if strings.HasPrefix(hex_puk, "0x") {
+		hex_puk = hex_puk[2:]
+	}
+	if len(hex_puk) != 66 {
+		return "", errors.New("puk length error!!!")
+	}
 	if sdk.Wallet.Default.Info == nil {
 		sdk.Wallet.Default.Info = rpc.GetAccountInfoByName(sdk.Wallet.Default.Name)
 	}
