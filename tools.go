@@ -219,8 +219,19 @@ func UnsignedTxHash(tx_raw_hex string) (tx_hash string) {
 	return
 }
 
-func PublicToAddress(puk string) (address string, err error) {
-	acct := rpc.GetAccountInfoByPublicKey(puk)
+func PublicToAddress(hex_puk string) (address string, err error) {
+	var byte_s []byte
+	if strings.HasPrefix(hex_puk, "0x") {
+		hex_puk = hex_puk[2:]
+	}
+	if len(hex_puk) != 66 {
+		return "", errors.New("puk length error!!!")
+	}
+	byte_s, err = hex.DecodeString(hex_puk)
+	if err != nil {
+		return
+	}
+	acct := rpc.GetAccountInfoByPublicKey(wallet.PublicKey(byte_s).ToBase58String())
 	if acct != nil {
 		address = acct.Name
 	} else {
@@ -229,10 +240,11 @@ func PublicToAddress(puk string) (address string, err error) {
 	return
 }
 
-func AddressToPublic(address string) (puk string, err error) {
+func AddressToPublic(address string) (hex_puk string, err error) {
 	acct := rpc.GetAccountInfoByName(address)
 	if acct != nil {
-		puk = acct.GetActivePuKey()
+		puk := wallet.PukFromBase58String(acct.GetActivePuKey())
+		hex_puk = "0x" + hex.EncodeToString(puk)
 	} else {
 		err = errors.New("not found the name in database.")
 	}

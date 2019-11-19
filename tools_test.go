@@ -8,7 +8,9 @@ import (
 )
 
 func TestInitSdk(t *testing.T) {
-	sdk.InitSDK("123.56.98.47", 80, false)
+	sdk.InitSDK("test.cocosbcx.net", 80, false)
+	sdk.Wallet.ImportAccount("gggg1", "12345678")
+	sdk.Wallet.SetDefaultAccount("gggg1", "12345678")
 	t.Log(rpc.GetDynamicGlobalProperties())
 }
 
@@ -21,11 +23,11 @@ func TestTxsForAddress(t *testing.T) {
 }
 
 func TestPuk2Addr(t *testing.T) {
-	t.Log(PublicToAddress("COCOS6wm6Cqmz82xdxsaXMAiffTRaLDNAS4UAEmyGfTxWq5PSCT2ekw"))
+	t.Log(PublicToAddress("0x02703d7df82c35218fbc459f49f3ae918c29fc68665f4689b8248808bbf79bddc2"))
 }
 
 func TestAddr2Puk(t *testing.T) {
-	t.Log(AddressToPublic("ximenyan1111"))
+	t.Log(AddressToPublic("gggg1"))
 }
 
 func TestGetBlockCount(t *testing.T) {
@@ -101,4 +103,9 @@ func TestUnsignedTxHash(t *testing.T) {
 	} else {
 		t.Error("Test Unsigned Tx Hash Error!")
 	}
+}
+
+func TestCreateAccount(t *testing.T) {
+	t.Log(CreateAccount("sqctccc123", "0x02703d34f82c35218fbc459f49f3ae918c29fc68665f4689b8248808bbf79bddc2"))
+
 }
