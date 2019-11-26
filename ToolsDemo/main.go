@@ -2,14 +2,14 @@
 package main
 
 import (
+	tools "CocosGoSDKTool"
 	sdk "CocosSDK"
-	tools "CocosTools"
 	"fmt"
 	"log"
 )
 
 func main() {
-	sdk.InitSDK("123.56.98.47", 80, false)
+	sdk.InitSDK("test.cocosbcx.net", 80, false)
 	sdk.Wallet.ImportAccount("gggg1", "12345678")
 	sdk.Wallet.SetDefaultAccount("gggg1", "12345678")
 	log.Println(tools.CreateAccount("sqctwe123", "0x02703d7df82c35218fbc459f49f3ae918c29fc68665f4689b8248808bbf79bddc2"))

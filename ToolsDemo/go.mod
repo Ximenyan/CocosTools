@@ -1,12 +1,14 @@
 module ToolsDemo
 
-replace CocosTools => github.com/ximenyan/CocosTools v0.0.0-20191119012203-cce3ac9db20c
+replace CocosGoSDKTool => /home/wang/ChainTest/cocos/CocosTools
 
-replace CocosSDK => github.com/ximenyan/Go-SDK v0.0.0-20191117075024-53fc76be9774
+//replace CocosGoSDKTool => github.com/Cocos-BCX/CocosGoSDKTool v0.0.0-20191126030604-3bd39b0d3379
+
+replace CocosSDK => github.com/Cocos-BCX/Go-SDK v0.0.0-20191118024115-8df676db900f
 
 go 1.13
 
 require (
+	CocosGoSDKTool v0.0.0-00010101000000-000000000000
 	CocosSDK v0.0.0-00010101000000-000000000000
-	CocosTools v0.0.0-00010101000000-000000000000
 )

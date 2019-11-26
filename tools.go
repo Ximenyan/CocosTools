@@ -1,4 +1,4 @@
-package CocosTools
+package CocosGoSDKTool
 
 import (
 	sdk "CocosSDK"

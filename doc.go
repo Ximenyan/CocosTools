@@ -3,4 +3,4 @@
 /*
 cocos-tools document
 */
-package CocosTools
+package CocosGoSDKTool

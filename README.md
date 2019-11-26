@@ -2,9 +2,9 @@
 Cocos sdk  tools
 # Test
 ```
-git clone https://github.com/ximenyan/CocosTools.git
+git clone https://github.com/Cocos-BCX/CocosGoSDKTool.git
 
-cd CocosTools/ToolsDemo
+cd CocosGoSDKTool/ToolsDemo
 
 go build
 
